@@ -1,5 +1,7 @@
 package com.example.asus.viewpagerhander;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -11,14 +13,17 @@ import android.widget.ImageView;
  */
 public class MyAdapter extends PagerAdapter {
     private ImageView[] imageViews;
+    private Context mContext;
 
-    public MyAdapter(ImageView[] imageViews) {
+
+    public MyAdapter(ImageView[] imageViews, Context mContext) {
         this.imageViews = imageViews;
+        this.mContext = mContext;
     }
 
     @Override
     public int getCount() {
-        return Integer.MAX_VALUE;
+        return imageViews.length;
     }
 
     @Override
@@ -28,12 +33,21 @@ public class MyAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(View container, int position) {
-        ((ViewPager)container).addView(imageViews[position%imageViews.length]);
-        return imageViews[position%imageViews.length];
+        ((ViewPager)container).addView(imageViews[position]);
+        if (position==imageViews.length-1){
+            imageViews[position].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent=new Intent(mContext,MainActivity.class);
+                    mContext.startActivity(intent);
+                }
+            });
+        }
+        return imageViews[position];
     }
 
     @Override
     public void destroyItem(View container, int position, Object object) {
-        ((ViewPager)container).removeView(imageViews[position%imageViews.length]);
+        ((ViewPager)container).removeView(imageViews[position]);
     }
 }
